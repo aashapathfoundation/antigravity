@@ -2,7 +2,7 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import { LayoutDashboard, Heart, List, Settings, LogOut, X } from 'lucide-react'
+import { LayoutDashboard, Heart, List, Settings, LogOut, X, Mail, BarChart3 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 
@@ -15,6 +15,8 @@ export default function AdminSidebar({ onClose }) {
         { name: 'Dashboard', href: '/admin', icon: LayoutDashboard },
         { name: 'Campaigns', href: '/admin/campaigns', icon: List },
         { name: 'Donations', href: '/admin/donations', icon: Heart },
+        { name: 'Email Campaigns', href: '/admin/email', icon: Mail },
+        { name: 'Email History', href: '/admin/email/campaigns', icon: BarChart3 },
         { name: 'Settings', href: '/admin/settings', icon: Settings },
     ]
 

@@ -2,11 +2,30 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import { Menu, X, Heart } from 'lucide-react'
+import { Menu, X, Heart, User, LogIn } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { createClient } from '@/lib/supabase/client'
+import { useEffect } from 'react'
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false)
+    const [user, setUser] = useState(null)
+    const supabase = createClient()
+
+    useEffect(() => {
+        const getUser = async () => {
+            const { data: { user } } = await supabase.auth.getUser()
+            setUser(user)
+        }
+
+        getUser()
+
+        const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+            setUser(session?.user ?? null)
+        })
+
+        return () => subscription.unsubscribe()
+    }, [])
 
     const navLinks = [
         { name: 'Home', href: '/' },
@@ -23,12 +42,7 @@ export default function Navbar() {
                     {/* Logo */}
                     <div className="flex-shrink-0 flex items-center">
                         <Link href="/" className="flex items-center gap-2">
-                            <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold">
-                                A
-                            </div>
-                            <span className="text-xl font-bold text-gray-900 tracking-tight">
-                                AashaPath Foundation <span className="text-blue-600">.</span>
-                            </span>
+                            <img src="/logo.jpg" alt="Aasha Path Foundation" className="h-12 w-auto" />
                         </Link>
                     </div>
 
@@ -50,6 +64,26 @@ export default function Navbar() {
                             <Heart className="w-4 h-4 fill-current" />
                             Donate Now
                         </Link>
+
+                        {user ? (
+                            <Link
+                                href="/profile"
+                                className="flex items-center gap-2 text-gray-600 hover:text-blue-600 font-medium transition-colors"
+                            >
+                                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center text-blue-600">
+                                    <User className="w-4 h-4" />
+                                </div>
+                                <span className="hidden lg:inline">Profile</span>
+                            </Link>
+                        ) : (
+                            <Link
+                                href="/login"
+                                className="flex items-center gap-2 text-gray-600 hover:text-blue-600 font-medium transition-colors"
+                            >
+                                <LogIn className="w-5 h-5" />
+                                Login
+                            </Link>
+                        )}
                     </div>
 
                     {/* Mobile Menu Button */}
@@ -82,7 +116,7 @@ export default function Navbar() {
                             {link.name}
                         </Link>
                     ))}
-                    <div className="pt-4">
+                    <div className="pt-4 space-y-3">
                         <Link
                             href="/donate"
                             className="block w-full text-center bg-blue-600 text-white px-5 py-3 rounded-lg font-semibold shadow-md active:scale-95 transition-transform"
@@ -90,6 +124,23 @@ export default function Navbar() {
                         >
                             Donate Now
                         </Link>
+                        {user ? (
+                            <Link
+                                href="/profile"
+                                className="block w-full text-center bg-gray-100 text-gray-700 px-5 py-3 rounded-lg font-semibold hover:bg-gray-200 transition-colors"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                View Profile
+                            </Link>
+                        ) : (
+                            <Link
+                                href="/login"
+                                className="block w-full text-center border border-gray-200 text-gray-700 px-5 py-3 rounded-lg font-semibold hover:bg-gray-50 transition-colors"
+                                onClick={() => setIsOpen(false)}
+                            >
+                                Login
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>

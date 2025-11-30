@@ -1,4 +1,7 @@
+"use client"
+
 import Link from 'next/link'
+import { useState } from 'react'
 import { Facebook, Twitter, Instagram, Linkedin, Mail, Phone, MapPin } from 'lucide-react'
 
 export default function Footer() {
@@ -8,9 +11,9 @@ export default function Footer() {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
                     {/* Brand Info */}
                     <div className="space-y-4">
-                        <h3 className="text-2xl font-bold text-white">
-                            Aasha Path Foundation <span className="text-blue-500">.</span>
-                        </h3>
+                        <div className="mb-4">
+                            <img src="/logo.jpg" alt="Aasha Path Foundation" className="h-16 w-auto" />
+                        </div>
                         <p className="text-gray-400 leading-relaxed">
                             Empowering communities and lighting up lives through sustainable development and compassionate care. Join us on our path of hope.
                         </p>
@@ -57,19 +60,7 @@ export default function Footer() {
                     <div>
                         <h4 className="text-lg font-semibold text-white mb-6">Newsletter</h4>
                         <p className="text-gray-400 mb-4">Subscribe to get updates on our latest campaigns and impact stories.</p>
-                        <form className="space-y-3">
-                            <input
-                                type="email"
-                                placeholder="Your email address"
-                                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white placeholder-gray-500"
-                            />
-                            <button
-                                type="submit"
-                                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors"
-                            >
-                                Subscribe
-                            </button>
-                        </form>
+                        <NewsletterForm />
                     </div>
                 </div>
 
@@ -78,6 +69,61 @@ export default function Footer() {
                 </div>
             </div>
         </footer>
+    )
+}
+
+function NewsletterForm() {
+    const [email, setEmail] = useState('')
+    const [status, setStatus] = useState('idle') // idle, loading, success, error
+    const [message, setMessage] = useState('')
+
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+        setStatus('loading')
+
+        try {
+            const res = await fetch('/api/newsletter', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ email }),
+            })
+
+            const data = await res.json()
+
+            if (!res.ok) throw new Error(data.error || 'Something went wrong')
+
+            setStatus('success')
+            setMessage(data.message)
+            setEmail('')
+        } catch (error) {
+            setStatus('error')
+            setMessage(error.message)
+        }
+    }
+
+    return (
+        <form onSubmit={handleSubmit} className="space-y-3">
+            <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Your email address"
+                required
+                className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-blue-500 text-white placeholder-gray-500"
+            />
+            <button
+                type="submit"
+                disabled={status === 'loading'}
+                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition-colors disabled:opacity-70"
+            >
+                {status === 'loading' ? 'Subscribing...' : 'Subscribe'}
+            </button>
+            {message && (
+                <p className={`text-sm ${status === 'success' ? 'text-green-400' : 'text-red-400'}`}>
+                    {message}
+                </p>
+            )}
+        </form>
     )
 }
 

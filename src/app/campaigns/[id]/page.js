@@ -163,9 +163,50 @@ export default function CampaignDetailsPage({ params }) {
                                     {campaign.is_active ? 'Donate Now' : 'Campaign Closed'}
                                 </Link>
 
-                                <button className="w-full py-3 px-6 bg-white border border-gray-200 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors flex items-center justify-center gap-2">
-                                    <Share2 className="w-4 h-4" /> Share Campaign
-                                </button>
+                                <div className="grid grid-cols-4 gap-2">
+                                    <button
+                                        onClick={() => {
+                                            const url = window.location.href
+                                            const text = `Check out this campaign: ${campaign.title}`
+                                            window.open(`https://wa.me/?text=${encodeURIComponent(text + ' ' + url)}`, '_blank')
+                                        }}
+                                        className="p-3 bg-green-50 text-green-600 rounded-xl hover:bg-green-100 transition-colors flex items-center justify-center"
+                                        title="Share on WhatsApp"
+                                    >
+                                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"></path></svg>
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            const url = window.location.href
+                                            window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank')
+                                        }}
+                                        className="p-3 bg-blue-50 text-blue-600 rounded-xl hover:bg-blue-100 transition-colors flex items-center justify-center"
+                                        title="Share on Facebook"
+                                    >
+                                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            const url = window.location.href
+                                            const text = `Check out this campaign: ${campaign.title}`
+                                            window.open(`https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(url)}`, '_blank')
+                                        }}
+                                        className="p-3 bg-sky-50 text-sky-500 rounded-xl hover:bg-sky-100 transition-colors flex items-center justify-center"
+                                        title="Share on Twitter"
+                                    >
+                                        <svg viewBox="0 0 24 24" width="24" height="24" stroke="currentColor" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" className="w-5 h-5"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg>
+                                    </button>
+                                    <button
+                                        onClick={() => {
+                                            navigator.clipboard.writeText(window.location.href)
+                                            alert('Link copied to clipboard!')
+                                        }}
+                                        className="p-3 bg-gray-50 text-gray-600 rounded-xl hover:bg-gray-100 transition-colors flex items-center justify-center"
+                                        title="Copy Link"
+                                    >
+                                        <Share2 className="w-5 h-5" />
+                                    </button>
+                                </div>
                             </div>
 
                             <div className="mt-8 pt-6 border-t border-gray-100">
