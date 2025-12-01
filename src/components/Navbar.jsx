@@ -36,13 +36,14 @@ export default function Navbar() {
     ]
 
     return (
-        <nav className="fixed top-0 w-full z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 shadow-sm">
+        <nav className="fixed top-0 w-full z-50 bg-white/100 backdrop-blur-md border-b border-gray-100 shadow-sm">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     {/* Logo */}
                     <div className="flex-shrink-0 flex items-center">
-                        <Link href="/" className="flex items-center gap-2">
-                            <img src="/logo.jpg" alt="Aasha Path Foundation" className="h-12 w-auto" />
+                        <Link href="/" className="flex items-center gap-3">
+                            <img src="/logo1.jpg" alt="Aasha Path Foundation" className="h-12 w-auto" />
+                            <span className="text-lg sm:text-xl font-bold text-gray-900">Aasha Path Foundation</span>
                         </Link>
                     </div>
 

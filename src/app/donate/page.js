@@ -22,6 +22,8 @@ function DonationForm() {
     const [loading, setLoading] = useState(false)
     const [campaign, setCampaign] = useState(null)
 
+    const [paymentSuccess, setPaymentSuccess] = useState(false)
+
     useEffect(() => {
         if (campaignId) {
             fetchCampaign()
@@ -95,6 +97,8 @@ function DonationForm() {
                 order_id: order.id,
                 handler: async function (response) {
                     // Payment Success
+                    setPaymentSuccess(true) // Show buffering state immediately
+
                     // Verify payment on backend
                     const verifyRes = await fetch('/api/verify-payment', {
                         method: 'POST',
@@ -114,8 +118,12 @@ function DonationForm() {
                             .update({ status: 'success', razorpay_payment_id: response.razorpay_payment_id })
                             .eq('id', donation.id)
 
-                        router.push('/thank-you')
+                        // Delay redirect slightly to show success message
+                        setTimeout(() => {
+                            router.push('/thank-you')
+                        }, 2000)
                     } else {
+                        setPaymentSuccess(false)
                         alert('Payment verification failed')
                     }
                 },
@@ -135,9 +143,18 @@ function DonationForm() {
         } catch (error) {
             console.error('Donation error:', error)
             alert(`Something went wrong: ${error.message || 'Unknown error'}`)
-        } finally {
             setLoading(false)
         }
+    }
+
+    if (paymentSuccess) {
+        return (
+            <div className="fixed inset-0 bg-white z-50 flex flex-col items-center justify-center">
+                <div className="w-24 h-24 border-4 border-blue-200 border-t-blue-600 rounded-full animate-spin mb-8"></div>
+                <h2 className="text-3xl font-bold text-gray-900 mb-2">Payment Successful!</h2>
+                <p className="text-gray-600 text-lg">Please wait while we redirect you...</p>
+            </div>
+        )
     }
 
     return (
